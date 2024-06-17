@@ -47,9 +47,11 @@ export class TasksService {
 
   async findOne(id: string, user: User) {
     try {
-      return await this.taskRepository.findOne({
+      const task = await this.taskRepository.findOne({
         where: { id, user, isActive: true }
       });
+
+      this.handleUserTask(task)
     } catch (error) {
 
       this.handleExceptions(error);
@@ -88,7 +90,7 @@ export class TasksService {
 
       this.handleUserTask(task)
 
-      task.isActive = true;
+      task.isActive = false;
       await this.taskRepository.preload({
         id,
         ...task
